@@ -1,0 +1,40 @@
+const express = require("express");
+const router = express.Router();
+const firstclass = require("../Rest-APIS/Class1-RESTAPIS");
+const secondclass = require("../Rest-APIS/Class2-RESTAPIS");
+const thirdclass = require("../Rest-APIS/Class3-RESTAPIS");
+const fourthclass = require("../Rest-APIS/Class4-RESTAPIS");
+const fifthclass = require("../Rest-APIS/Class5-RESTAPIS");
+const sixthclass = require("../Rest-APIS/Class6-RESTAPIS");
+const seventhclass = require("../Rest-APIS/Class7-RESTAPIS");
+const eighthclass = require("../Rest-APIS/Class8-RESTAPIS");
+const ninthclass = require("../Rest-APIS/Class9-RESTAPIS");
+const tenthclass = require("../Rest-APIS/Class10-RESTAPIS");
+const studentDetails = require("../Rest-APIS/StudentDetails-RESTAPIS");
+const studentLoginDetails = require("../Rest-APIS/StudentLogin-RESTAPIS");
+const teacherDetails = require("../Rest-APIS/TeacherDetails-RESTAPIS");
+const teacherLoginDetails = require("../Rest-APIS/TeacherLogin-RESTAPIS");
+const adminDetails = require("../Rest-APIS/AdminDetails-RESTAPIS");
+const adminLoginDetails = require("../Rest-APIS/AdminLogin-RESTAPIS");
+const adminTeacherEmail = require("../Rest-APIS/Admin-teacher-Email-RESTAPIS");
+
+
+router.use("/firstclass", firstclass);
+router.use("/secondclass", secondclass);
+router.use("/thirdclass", thirdclass);
+router.use("/fourthclass", fourthclass);
+router.use("/fifthclass", fifthclass);
+router.use("/sixthclass", sixthclass);
+router.use("/seventhclass", seventhclass);
+router.use("/eighthclass", eighthclass);
+router.use("/ninthclass", ninthclass);
+router.use("/tenthclass", tenthclass);
+router.use("/userstudentdetails", studentDetails);
+router.use("/userstudentlogin", studentLoginDetails);
+router.use("/userteacherlogin", teacherLoginDetails);
+router.use("/userteacherdetails", teacherDetails);
+router.use("/admin", adminDetails);
+router.use("/adminLogin", adminLoginDetails);
+router.use("/adminTeacherEmail", adminTeacherEmail);
+
+module.exports = router;
