@@ -23,7 +23,7 @@ router.post("/AdminLoginDetails", async (req, res) => {
             return res.status(400).json({ message: "Email and password are required" });
         }
 
-        const adminSchool = await admindetailssss.findOne({ adminEmail });      
+        const adminSchool = await admindetailssss.findOne({ adminEmail });
         if (!adminSchool) {
             return res.status(404).json({ message: "Admin not found" });
         }
@@ -34,7 +34,7 @@ router.post("/AdminLoginDetails", async (req, res) => {
         }
 
         const loginRecord = new AdminLoginController({
-            adminEmail: adminSchool.adminEmail,  
+            adminEmail: adminSchool.adminEmail,
             lastlogin: new Date(),
             status: "active",
             role: "admin"

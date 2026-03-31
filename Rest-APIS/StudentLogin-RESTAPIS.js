@@ -80,10 +80,12 @@ router.post("/studentLogin", async (req, res) => {
 
         const token = jwt.sign(
             {
-                role: "student",
                 stdemail: user.stdemail,
+                stdname: user.stdname,
                 stdrollNumber: user.stdrollNumber,
-                stdname: user.stdname
+                role: "student",
+                stdphoneNumber: user.stdphoneNumber,
+                stdImage: user.stdImage
             },
             JWT_SECRET,
             { expiresIn: "7d" }
@@ -98,6 +100,8 @@ router.post("/studentLogin", async (req, res) => {
                 stdname: user.stdname,
                 stdrollNumber: user.stdrollNumber,
                 role: "student",
+                stdphoneNumber: user.stdphoneNumber,
+                stdImage: user.stdImage
             }
         });
     } catch (error) {

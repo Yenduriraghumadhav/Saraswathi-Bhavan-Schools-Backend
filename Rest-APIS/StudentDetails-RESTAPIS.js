@@ -5,8 +5,8 @@ const studentDetailsmodel = require("../Schema-details/StudentDetails-schema");
 
 router.post("/StudentDetails", async (req, res) => {
     try {
-        const { stdname, stdrollNumber, stdemail, stdphoneNumber, stdaddress, stdpassword, stdfathername, stdmothername, stdgender ,TeacherGender } = req.body;
-        if (!stdrollNumber || !stdemail || !stdphoneNumber || !stdaddress || !stdpassword || !stdfathername || !stdmothername || !stdgender || !stdname || !TeacherGender) {
+        const { stdname, stdrollNumber, stdemail, stdphoneNumber, stdaddress, stdpassword, stdfathername, stdmothername, stdgender ,stdImage  } = req.body;
+        if (!stdrollNumber || !stdemail || !stdphoneNumber || !stdaddress || !stdpassword || !stdfathername || !stdmothername || !stdgender || !stdname || !stdImage) {
             return res.status(400).json({
                 error: "All fields are required",
             });
@@ -29,7 +29,7 @@ router.post("/StudentDetails", async (req, res) => {
         }
 
 
-        if (!['male', 'female', 'others'].includes(TeacherGender.toLowerCase())) {
+        if (!['male', 'female', 'others'].includes(stdgender.toLowerCase())) {
             return res.status(400).json({ error: "Gender must be male, female, or others" });
         }
         
@@ -61,7 +61,8 @@ router.post("/StudentDetails", async (req, res) => {
             stdpassword: hashedPassword,
             stdfathername,
             stdmothername,
-            stdgender
+            stdgender,
+            stdImage
         });
         const saved = await student.save();
         console.log("[StudentDetails] record created for", saved.stdemail);
@@ -94,13 +95,14 @@ router.put("/StudentDetails", async (req, res) => {
             stdfathername,
             stdmothername,
             stdrollNumber: newRoll,
+            stdImage,
             role,
         } = req.body;
 
 
         const isPrivileged = role === "admin" || role === "teacher";
         if (!isPrivileged) {
-            if (newRoll || stdaddress || stdfathername || stdmothername) {
+            if (newRoll || stdaddress || stdfathername || stdmothername || stdImage) {
                 return res.status(403).json({
                     error: "Not authorized to update rollNumber, father name, mother name, or year",
                 });
@@ -110,6 +112,7 @@ router.put("/StudentDetails", async (req, res) => {
             if (stdaddress) student.stdaddress = stdaddress;
             if (stdfathername) student.stdfathername = stdfathername;
             if (stdmothername) student.stdmothername = stdmothername;
+            if (stdImage) student.stdImage = stdImage;
         }
 
 

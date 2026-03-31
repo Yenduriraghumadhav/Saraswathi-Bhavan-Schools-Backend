@@ -17,6 +17,7 @@ const teacherLoginDetails = require("../Rest-APIS/TeacherLogin-RESTAPIS");
 const adminDetails = require("../Rest-APIS/AdminDetails-RESTAPIS");
 const adminLoginDetails = require("../Rest-APIS/AdminLogin-RESTAPIS");
 const adminTeacherEmail = require("../Rest-APIS/Admin-teacher-Email-RESTAPIS");
+const getInTouchDetails = require("../Rest-APIS/Get-in-touch-RESTAPIS");
 
 
 router.use("/firstclass", firstclass);
@@ -36,5 +37,6 @@ router.use("/userteacherdetails", teacherDetails);
 router.use("/admin", adminDetails);
 router.use("/adminLogin", adminLoginDetails);
 router.use("/adminTeacherEmail", adminTeacherEmail);
+router.use("/getInTouchDetails", getInTouchDetails);
 
 module.exports = router;

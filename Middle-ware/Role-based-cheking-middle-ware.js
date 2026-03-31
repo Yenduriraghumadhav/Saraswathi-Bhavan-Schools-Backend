@@ -14,7 +14,7 @@ const roleCheckingMiddleware = async (req, res, next) => {
     const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, JWT_SECRET);
 
-    const userEmail = decoded.TeacherEmail || decoded.adminEmail || decoded.email;
+    const userEmail = decoded.TeacherEmail || decoded.adminEmail || decoded.stdemail;
     const userRole = decoded.role;
 
     console.log("🔍 Token decoded:", { userEmail, userRole });
@@ -26,7 +26,6 @@ const roleCheckingMiddleware = async (req, res, next) => {
       user = await adminModel.findOne({ adminEmail: userEmail });
     } else if (userRole === "student") {
       user = await studentmodel.findOne({ stdemail: userEmail });
-      return next();
     }
 
     if (!user) {

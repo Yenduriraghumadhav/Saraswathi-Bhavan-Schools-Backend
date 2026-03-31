@@ -41,8 +41,10 @@ router.post("/teacherLogin", async (req, res) => {
             {
                 role: "teacher",
                 TeacherEmail: user.TeacherEmail,
-                TeacherID: user.TeacherID,
-                TeacherName: user.TeacherName
+                TeacherName: user.TeacherName,
+                TeacherPhone: user.TeacherPhone,
+                TeacherAddress: user.TeacherAddress,
+                TeacherImage: user.TeacherImage
             },
             JWT_SECRET,
             { expiresIn: "7d" }
@@ -55,10 +57,12 @@ router.post("/teacherLogin", async (req, res) => {
                 message: "Login successful",
                 token: token,
                 user: {
+                    role: "teacher",
                     TeacherEmail: user.TeacherEmail,
-                    TeacherID: user.TeacherID,
                     TeacherName: user.TeacherName,
-                    role: "teacher"
+                    TeacherPhone: user.TeacherPhone,
+                    TeacherAddress: user.TeacherAddress,
+                    TeacherImage: user.TeacherImage
                 }
             });
         } catch (saveErr) {
