@@ -7,7 +7,6 @@ const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-producti
 
 const roleCheckingMiddleware = async (req, res, next) => {
   try {
-     console.log("Checking token in cookies" , req.cookies);
     const token = req.cookies?.token; 
     if (!token) {
       return res.status(401).json({ message: "No token provided in cookies" });
@@ -18,7 +17,6 @@ const roleCheckingMiddleware = async (req, res, next) => {
     const userEmail = decoded.TeacherEmail || decoded.adminEmail || decoded.stdemail || decoded.email;
     const userRole = decoded.role;
 
-    console.log("Token decoded:", { userEmail, userRole });
 
     let user;
     if (userRole === "teacher") {
@@ -28,8 +26,6 @@ const roleCheckingMiddleware = async (req, res, next) => {
     } else if (userRole === "student") {
       user = await studentModel.findOne({ stdemail: userEmail });
     }
-
-    console.log("User found in database:", user ? "Yes" : "No");
 
     if (!user) {
       return res.status(404).json({ message: "User not found in database" });

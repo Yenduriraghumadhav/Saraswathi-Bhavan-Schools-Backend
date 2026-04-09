@@ -24,11 +24,17 @@ const upload = multer({ storage: storage });
 
 router.post("/StudentDetails", upload.single("stdImage"), async (req, res) => {
     try {
+         console.log(req.file);
+        console.log("[StudentDetails] Received request body:", req.body);
         const { stdname, stdrollNumber, stdemail, stdphoneNumber, stdaddress, stdpassword, stdfathername, stdmothername, stdgender, stdclass } = req.body;
-        console.log("[StudentDetails] Received data:", req.body);
         const stdImage = req.file ? req.file.filename : null;
+        console.log("[StudentDetails] stdImage filename:", stdImage);
 
-        if (!stdrollNumber || !stdemail || !stdphoneNumber || !stdaddress || !stdpassword || !stdfathername || !stdmothername || !stdgender || !stdname || !stdclass) {
+        if (!stdImage) {
+            return res.status(400).json({ error: "Student image is required" });
+        }
+
+        if (!stdrollNumber || !stdemail || !stdphoneNumber || !stdaddress || !stdpassword || !stdfathername || !stdmothername || !stdgender || !stdname || !stdclass || !stdImage) {
             return res.status(400).json({
                 error: "All fields are required",
             });
@@ -55,7 +61,9 @@ router.post("/StudentDetails", upload.single("stdImage"), async (req, res) => {
             return res.status(400).json({ error: "Gender must be male, female, or others" });
         }
 
-        if (stdclass <= 1 || stdclass >= 10) {
+        const classNum = Number(stdclass);
+
+        if (classNum < 1 || classNum > 10) {
             return res.status(400).json({ error: "Class must be between 1 and 10" });
         }
 
@@ -92,7 +100,6 @@ router.post("/StudentDetails", upload.single("stdImage"), async (req, res) => {
             stdclass
         });
         const saved = await student.save();
-        console.log("[StudentDetails] record created for", saved.stdemail);
         res.status(201).json({
             message: "Student saved successfully",
             student: saved,

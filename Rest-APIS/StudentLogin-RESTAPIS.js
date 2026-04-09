@@ -5,8 +5,6 @@ const jwt = require("jsonwebtoken");
 const studentLoginDetailsModel = require("../Schema-details/StudentLogin-schema");
 const studentDetailsmodel = require("../Schema-details/StudentDetails-schema");
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
-console.log("JWT_SECRET in StudentLogin-RESTAPIS:", JWT_SECRET);
-
 // This function checks the indexes in the student login collection and removes a legacy 
 // index (stdrollNumber_1). That index can cause duplicate key errors when the same user logs in multiple times.
 //  By removing it, the system allows multiple login records for the same user and prevents database crashes.
@@ -87,8 +85,6 @@ router.post("/studentLogin", async (req, res) => {
             JWT_SECRET,
             { expiresIn: "7d" }
         );
-        console.log("tokensssssss", token);
-        console.log("JWT_SECRET in StudentLogin-RESTAPIS:", JWT_SECRET);
 
         res.cookie("token", token, {
             httpOnly: true,
@@ -114,7 +110,6 @@ router.post("/studentLogin", async (req, res) => {
                     stdclass: user.stdclass
                 }
             });
-        console.log("Cookies set in response:", res.getHeader('Set-Cookie'));
 
 
     } catch (error) {

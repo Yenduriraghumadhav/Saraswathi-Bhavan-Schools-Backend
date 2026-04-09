@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const fifthgrademodel = require("../Schema-details/Class5-schema");
+const totalstudentsdetails = require("../Schema-details/StudentDetails-schema");
 const { roleCheckingMiddleware, requireRole } = require("../Middle-ware/Role-based-cheking-middle-ware");
 router.use(roleCheckingMiddleware);
 
@@ -8,7 +9,8 @@ router.use(roleCheckingMiddleware);
 
 router.post("/fifthclassstudents", requireRole(["teacher", "admin"]), async (req, res) => {
     try {
-        const { stdRollNumber, stdName, resultType, result } = req.body;
+        console.log("Received data:", req.body);
+        const { stdRollNumber, resultType, result } = req.body;
         if (!stdRollNumber || !resultType || !result) {
             return res.status(400).json({
                 error: "stdRollNumber, resultType and result object are required",
@@ -19,42 +21,45 @@ router.post("/fifthclassstudents", requireRole(["teacher", "admin"]), async (req
             return res.status(400).json({ error: "Invalid resultType" });
         }
 
+        const mainStudent = await totalstudentsdetails.findOne({ stdRollNumber });
 
-        let student = await fifthgrademodel.findOne({ stdRollNumber });
-        if (!student) {
-            student = new fifthgrademodel({ stdName: stdName || "", stdRollNumber });
-        }
-
-        if (
-            student.result &&
-            student.result[resultType] &&
-            (student.result[resultType].maths != null ||
-                student.result[resultType].science != null ||
-                student.result[resultType].english != null ||
-                student.result[resultType].telugu != null ||
-                student.result[resultType].hindi != null ||
-                student.result[resultType].social != null)
-        ) {
-            return res.status(400).json({
-                message: `${resultType} results already entered`,
-                existing: student.result[resultType],
+        if (!mainStudent) {
+            return res.status(404).json({
+                error: "Student not found in main records",
             });
         }
 
-        student.result = student.result || {};
-        student.result[resultType] = {
-            maths: result.maths ?? 0,
-            science: result.science ?? 0,
-            english: result.english ?? 0,
-            telugu: result.telugu ?? 0,
-            hindi: result.hindi ?? 0,
-            social: result.social ?? 0,
-        };
+        let FifthGradestudent = await fifthgrademodel.findOne({ stdRollNumber });
 
-        student.markModified("result");
+        if (!FifthGradestudent) {
+            FifthGradestudent = new fifthgrademodel({
+                stdRollNumber: mainStudent.stdrollNumber,
+                stdName: mainStudent.stdname,
+                stdclass: mainStudent.stdclass,
+                result: {}
+            });
+        }
 
-        const saved = await student.save();
-        return res.status(student.isNew ? 201 : 200).json(saved);
+        const existingResult = FifthGradestudent.result?.[resultType];
+
+        if (
+            existingResult &&
+            Object.values(existingResult).some(val => val != null)
+        ) {
+            return res.status(400).json({
+                message: `${resultType} data already uploaded`,
+                existing: existingResult,
+            });
+        }
+
+        FifthGradestudent.result[resultType] = result;
+        FifthGradestudent.markModified("result");
+        const saved = await FifthGradestudent.save();
+
+        return res.status(200).json({
+            message: `${resultType} marks saved successfully`,
+            data: saved
+        });
     } catch (error) {
         console.error("Error creating/updating student", error);
         res.status(500).json({ error: "Internal Server Error" });
@@ -64,7 +69,7 @@ router.post("/fifthclassstudents", requireRole(["teacher", "admin"]), async (req
 
 
 
-router.put("/fifthclassstudents",requireRole([ "teacher", "admin"]), async (req, res) => {
+router.put("/fifthclassstudents", requireRole(["teacher", "admin"]), async (req, res) => {
     try {
         const { stdRollNumber: rollnumber, resultType, result } = req.body;
 
@@ -103,7 +108,7 @@ router.put("/fifthclassstudents",requireRole([ "teacher", "admin"]), async (req,
 
 
 
-router.delete("/fifthclassstudents",requireRole([ "admin"]), async (req, res) => {
+router.delete("/fifthclassstudents", requireRole(["admin"]), async (req, res) => {
     try {
         const { stdRollNumber: rollnumber } = req.body;
         if (!rollnumber) {
@@ -122,10 +127,10 @@ router.delete("/fifthclassstudents",requireRole([ "admin"]), async (req, res) =>
 });
 
 
-router.get("/fifthclassstudents",requireRole([ "student","teacher", "admin"]), async (req, res) => {
+router.get("/fifthclassstudents", requireRole(["student", "teacher", "admin"]), async (req, res) => {
     try {
         const students = await fifthgrademodel.find();
-        res.json(students);
+        return res.json({ students });
     } catch (error) {
         console.error("Error fetching students", error);
         res.status(500).json({ error: "Internal Server Error" });
