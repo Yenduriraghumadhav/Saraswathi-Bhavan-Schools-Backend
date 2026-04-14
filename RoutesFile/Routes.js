@@ -19,6 +19,8 @@ const adminLoginDetails = require("../Rest-APIS/AdminLogin-RESTAPIS");
 const adminTeacherEmail = require("../Rest-APIS/Admin-teacher-Email-RESTAPIS");
 const getInTouchDetails = require("../Rest-APIS/Get-in-touch-RESTAPIS");
 const totallogoutDetails = require("../Rest-APIS/Logout-forall-RESTAPIS");
+const otpforstudents = require("../Rest-APIS/Otp-for-students-RESTAPIS");
+const otpforteachers = require("../Rest-APIS/Otp-for-teachers-RESTAPIS");
 
 
 router.use("/firstclass", firstclass);
@@ -40,5 +42,7 @@ router.use("/adminLogin", adminLoginDetails);
 router.use("/adminTeacherEmail", adminTeacherEmail);
 router.use("/getInTouchDetails", getInTouchDetails);
 router.use("/totallogout", totallogoutDetails);
+router.use("/otpforstudents", otpforstudents);
+router.use("/otpforteachers", otpforteachers);
 
 module.exports = router;

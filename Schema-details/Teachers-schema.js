@@ -8,7 +8,8 @@ const TeacherSchema = new mongooes.Schema({
     },
     TeacherEmail: {
         type: String,
-        required: true
+        required: true,
+        unique : true
     },
     TeacherPassword: {
         type: String,

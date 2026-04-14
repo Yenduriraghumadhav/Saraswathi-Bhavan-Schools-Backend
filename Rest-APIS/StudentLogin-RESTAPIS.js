@@ -83,7 +83,7 @@ router.post("/studentLogin", async (req, res) => {
                 stdclass: user.stdclass
             },
             JWT_SECRET,
-            { expiresIn: "7d" }
+            { expiresIn: "1d" }
         );
 
         res.cookie("token", token, {

@@ -9,7 +9,7 @@ router.use(roleCheckingMiddleware);
 router.post("/tenthclassstudents", requireRole(["teacher", "admin"]), async (req, res) => {
     try {
         console.log("Received data:", req.body);
-        const { stdRollNumber, resultType, result } = req.body;
+        const { stdRollNumber, resultType, result, classurl } = req.body;
         if (!stdRollNumber || !resultType || !result) {
             return res.status(400).json({
                 error: "stdRollNumber, resultType and result object are required",
@@ -20,11 +20,17 @@ router.post("/tenthclassstudents", requireRole(["teacher", "admin"]), async (req
             return res.status(400).json({ error: "Invalid resultType" });
         }
 
-        const mainStudent = await totalstudentsdetails.findOne({ stdRollNumber });
+        const mainStudent = await totalstudentsdetails.findOne({ stdrollNumber: stdRollNumber });
 
         if (!mainStudent) {
             return res.status(404).json({
                 error: "Student not found in main records",
+            });
+        }
+
+        if (mainStudent.stdclass !== 10) {
+            return res.status(400).json({
+                error: `Class mismatch: This student belongs to Class ${mainStudent.stdclass}, but you are trying to add marks for 10th Class.`
             });
         }
 

@@ -9,7 +9,7 @@ const app = express();
 const path = require("path");
 const absolutePath = path.join(__dirname, "studentimageuploads");
 app.use(crors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "http://localhost:5174"],
     credentials: true
 }));
 app.use(cookieParser());

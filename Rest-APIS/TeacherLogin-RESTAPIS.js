@@ -48,7 +48,7 @@ router.post("/teacherLogin", async (req, res) => {
                 TeacherImage: user.TeacherImage
             },
             JWT_SECRET,
-            { expiresIn: "7d" }
+            { expiresIn: "1d" }
         );
 
         res.cookie("token", token, {

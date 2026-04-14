@@ -27,6 +27,8 @@ const roleCheckingMiddleware = async (req, res, next) => {
       user = await studentModel.findOne({ stdemail: userEmail });
     }
 
+    console.log("🔍 User found in DB:", !!user, "Role:", userRole, "Email:", userEmail);
+
     if (!user) {
       return res.status(404).json({ message: "User not found in database" });
     }

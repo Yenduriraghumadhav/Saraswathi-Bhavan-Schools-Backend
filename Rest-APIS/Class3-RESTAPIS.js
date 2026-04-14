@@ -9,7 +9,7 @@ router.use(roleCheckingMiddleware);
 router.post("/Thirdclassstudents", requireRole(["teacher", "admin"]), async (req, res) => {
     try {
         console.log("Received data:", req.body);
-        const { stdRollNumber, resultType, result } = req.body;
+        const { stdRollNumber, resultType, result  , classurl} = req.body;
         if (!stdRollNumber || !resultType || !result) {
             return res.status(400).json({
                 error: "stdRollNumber, resultType and result object are required",
@@ -20,13 +20,23 @@ router.post("/Thirdclassstudents", requireRole(["teacher", "admin"]), async (req
             return res.status(400).json({ error: "Invalid resultType" });
         }
 
-        const mainStudent = await totalstudentsdetails.findOne({ stdRollNumber });
+        console.log("Searching for Student Roll Number:", stdRollNumber);
+        console.log("classurl", classurl);
+        const mainStudent = await totalstudentsdetails.findOne({ stdrollNumber: stdRollNumber });
 
         if (!mainStudent) {
             return res.status(404).json({
                 error: "Student not found in main records",
             });
         }
+
+        if (mainStudent.stdclass !== 3) {
+            return res.status(400).json({
+                error: `Class mismatch: This student belongs to Class ${mainStudent.stdclass}, but you are trying to add marks for Class 3.`
+            });
+        }
+
+        console.log("Main student record found:", mainStudent);
 
         let ThirdGradeStudent = await thirdgrademodel.findOne({ stdRollNumber });
 

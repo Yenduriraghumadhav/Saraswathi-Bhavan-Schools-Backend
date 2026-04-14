@@ -9,7 +9,7 @@ router.use(roleCheckingMiddleware);
 router.post("/fourthclassstudents", requireRole(["teacher", "admin"]), async (req, res) => {
     try {
         console.log("Received data:", req.body);
-        const { stdRollNumber, resultType, result } = req.body;
+        const { stdRollNumber, resultType, result, classurl } = req.body;
         if (!stdRollNumber || !resultType || !result) {
             return res.status(400).json({
                 error: "stdRollNumber, resultType and result object are required",
@@ -19,12 +19,18 @@ router.post("/fourthclassstudents", requireRole(["teacher", "admin"]), async (re
         if (!["mid", "prefinal", "final"].includes(resultType)) {
             return res.status(400).json({ error: "Invalid resultType" });
         }
-
-        const mainStudent = await totalstudentsdetails.findOne({ stdRollNumber });
+        console.log("classurl", classurl);
+        const mainStudent = await totalstudentsdetails.findOne({ stdrollNumber: stdRollNumber });
 
         if (!mainStudent) {
             return res.status(404).json({
                 error: "Student not found in main records",
+            });
+        }
+
+        if (mainStudent.stdclass !== 4) {
+            return res.status(400).json({
+                error: `Class mismatch: This student belongs to Class ${mainStudent.stdclass}, but you are trying to add marks for 4th Class.`
             });
         }
 
@@ -51,9 +57,9 @@ router.post("/fourthclassstudents", requireRole(["teacher", "admin"]), async (re
             });
         }
 
-        Fourthgrademodel.result[resultType] = result;
-        Fourthgrademodel.markModified("result");
-        const saved = await Fourthgrademodel.save();
+        FourthGradestudent.result[resultType] = result;
+        FourthGradestudent.markModified("result");
+        const saved = await FourthGradestudent.save();
 
         return res.status(200).json({
             message: `${resultType} marks saved successfully`,

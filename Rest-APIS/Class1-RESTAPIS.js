@@ -9,7 +9,7 @@ router.use(roleCheckingMiddleware);
 router.post("/Firstclassstudents", requireRole(["teacher", "admin"]), async (req, res) => {
     try {
         console.log("Received data:", req.body);
-        const { stdRollNumber, resultType, result } = req.body;
+        const { stdRollNumber, resultType, result, classurl } = req.body;
         if (!stdRollNumber || !resultType || !result) {
             return res.status(400).json({
                 error: "stdRollNumber, resultType and result object are required",
@@ -20,14 +20,24 @@ router.post("/Firstclassstudents", requireRole(["teacher", "admin"]), async (req
             return res.status(400).json({ error: "Invalid resultType" });
         }
 
+        console.log("Searching for Student Roll Number:", stdRollNumber);
+        console.log("Searching for Class:", classurl);
+
         const mainStudent = await totalstudentsdetails.findOne({ stdrollNumber: stdRollNumber });
-        console.log("Main student record:", mainStudent);
 
         if (!mainStudent) {
             return res.status(404).json({
                 error: "Student not found in main records",
             });
         }
+
+        if (mainStudent.stdclass !== 1) {
+            return res.status(400).json({
+                error: `Class mismatch: This student belongs to Class ${mainStudent.stdclass}, but you are trying to add marks for 1st Class.`
+            });
+        }
+
+        console.log("Main student record found:", mainStudent);
 
         let firstGradeStudent = await firstgrademodel.findOne({ stdRollNumber });
 
@@ -70,11 +80,12 @@ router.post("/Firstclassstudents", requireRole(["teacher", "admin"]), async (req
 
 
 router.put("/Firstclassstudents", requireRole(["teacher", "admin"]), async (req, res) => {
+    console.log("received data for update:", req.body);
     try {
         const { stdRollNumber: rollnumber, resultType, result } = req.body;
 
         if (!rollnumber || !resultType || !result) {
-            return res.status(400).json({ error: "rollnumber, resultType and result are required" });
+            return res.status(400).json({ error: "rollnumber, resultType, result and classurl are required" });
         }
 
         if (!["mid", "prefinal", "final"].includes(resultType)) {
