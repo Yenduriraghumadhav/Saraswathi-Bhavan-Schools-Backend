@@ -1,4 +1,4 @@
-require('dotenv').config({path : "./secrt.env"});   
+require('dotenv').config({ path: "./secrt.env" });
 const mongoose = require('mongoose');
 const express = require('express');
 const connectDB = require("./DataBase-connection/DataBase.js");

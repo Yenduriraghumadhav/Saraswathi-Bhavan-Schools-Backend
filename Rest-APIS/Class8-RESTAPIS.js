@@ -3,11 +3,11 @@ const router = express.Router();
 const eightgrademodel = require("../Schema-details/Class8-schema");
 const totalstudentsdetails = require("../Schema-details/StudentDetails-schema");
 const { roleCheckingMiddleware, requireRole } = require("../Middle-ware/Role-based-cheking-middle-ware");
-const e = require("express");
 router.use(roleCheckingMiddleware);
+const TeacherCLassVerification = require("../Middle-ware/TeacherCLassVerification");
 
 
-router.post("/eighthclassstudents", requireRole(["teacher", "admin"]), async (req, res) => {
+router.post("/eighthclassstudents", requireRole(["teacher", "admin"]),TeacherCLassVerification, async (req, res) => {
     try {
         console.log("Received data:", req.body);
         const { stdRollNumber, resultType, result, classurl } = req.body;
@@ -75,7 +75,7 @@ router.post("/eighthclassstudents", requireRole(["teacher", "admin"]), async (re
 
 
 
-router.put("/eighthclassstudents", requireRole(["teacher", "admin"]), async (req, res) => {
+router.put("/eighthclassstudents", requireRole(["teacher", "admin"]),TeacherCLassVerification, async (req, res) => {
     try {
         const { stdRollNumber: rollnumber, resultType, result } = req.body;
 

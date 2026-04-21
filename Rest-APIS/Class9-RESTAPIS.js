@@ -4,9 +4,10 @@ const ninthclassstudents = require("../Schema-details/Class9-schema");
 const totalstudentsdetails = require("../Schema-details/StudentDetails-schema");
 const { roleCheckingMiddleware, requireRole } = require("../Middle-ware/Role-based-cheking-middle-ware");
 router.use(roleCheckingMiddleware);
+const TeacherCLassVerification = require("../Middle-ware/TeacherCLassVerification");
 
 
-router.post("/ninthclassstudents", requireRole(["teacher", "admin"]), async (req, res) => {
+router.post("/ninthclassstudents", requireRole(["teacher", "admin"]),TeacherCLassVerification, async (req, res) => {
     try {
         console.log("Received data:", req.body);
         const { stdRollNumber, resultType, result, classurl } = req.body;
@@ -73,7 +74,7 @@ router.post("/ninthclassstudents", requireRole(["teacher", "admin"]), async (req
 
 
 
-router.put("/ninthclassstudents", requireRole(["teacher", "admin"]), async (req, res) => {
+router.put("/ninthclassstudents", requireRole(["teacher", "admin"]),TeacherCLassVerification, async (req, res) => {
     try {
         const { stdRollNumber: rollnumber, resultType, result } = req.body;
 

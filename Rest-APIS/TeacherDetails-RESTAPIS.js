@@ -5,8 +5,8 @@ const TeacherDetails = require("../Schema-details/Teachers-schema");
 
 router.post("/TeacherDetails", async (req, res) => {
     try {
-        const { TeacherName, TeacherEmail, TeacherPassword, TeacherPhone, TeacherAddress, TeacherStatus, TeacherGender ,TeacherImage} = req.body;
-        if (!TeacherName || !TeacherEmail || !TeacherPassword || !TeacherPhone || !TeacherAddress || !TeacherGender || !TeacherImage) {
+        const { TeacherName, TeacherEmail, TeacherPassword, TeacherPhone, TeacherAddress, TeacherStatus, TeacherGender ,TeacherImage ,TeacherAssignedclass} = req.body;
+        if (!TeacherName || !TeacherEmail || !TeacherPassword || !TeacherPhone || !TeacherAddress || !TeacherGender || !TeacherImage || !TeacherAssignedclass) {
             return res.status(400).json({
                 error: "All fields are required",
             });
@@ -56,7 +56,8 @@ router.post("/TeacherDetails", async (req, res) => {
             TeacherAddress,
             TeacherGender,
             TeacherStatus,
-            TeacherImage
+            TeacherImage,
+            TeacherAssignedclass
         });
         const saved = await newTeacher.save();
         return res.status(201).json(saved);

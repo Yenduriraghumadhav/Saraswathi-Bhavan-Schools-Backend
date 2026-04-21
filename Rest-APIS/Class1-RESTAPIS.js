@@ -4,9 +4,11 @@ const firstgrademodel = require("../Schema-details/Class1-schema");
 const totalstudentsdetails = require("../Schema-details/StudentDetails-schema");
 const { roleCheckingMiddleware, requireRole } = require("../Middle-ware/Role-based-cheking-middle-ware");
 router.use(roleCheckingMiddleware);
+const TeacherCLassVerification = require("../Middle-ware/TeacherCLassVerification");
 
 
-router.post("/Firstclassstudents", requireRole(["teacher", "admin"]), async (req, res) => {
+
+router.post("/Firstclassstudents", requireRole(["teacher", "admin"]), TeacherCLassVerification, async (req, res) => {
     try {
         console.log("Received data:", req.body);
         const { stdRollNumber, resultType, result, classurl } = req.body;
@@ -79,7 +81,7 @@ router.post("/Firstclassstudents", requireRole(["teacher", "admin"]), async (req
 });
 
 
-router.put("/Firstclassstudents", requireRole(["teacher", "admin"]), async (req, res) => {
+router.put("/Firstclassstudents", requireRole(["teacher", "admin"]), TeacherCLassVerification, async (req, res) => {
     console.log("received data for update:", req.body);
     try {
         const { stdRollNumber: rollnumber, resultType, result } = req.body;
@@ -116,6 +118,7 @@ router.put("/Firstclassstudents", requireRole(["teacher", "admin"]), async (req,
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
+
 
 
 

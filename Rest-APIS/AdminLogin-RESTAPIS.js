@@ -17,18 +17,21 @@ router.get("/AdminLoginDetails", async (req, res) => {
 
 
 router.post("/AdminLoginDetails", async (req, res) => {
+    console.log("body data ", req.body);
     try {
-        const { adminEmail, adminPassword } = req.body;
-        if (!adminEmail || !adminPassword) {
+        const { email, password } = req.body;
+        if (!email || !password) {
             return res.status(400).json({ message: "Email and password are required" });
         }
 
-        const adminSchool = await admindetailssss.findOne({ adminEmail });
+        const adminSchool = await admindetailssss.findOne({ adminEmail: email });
+        console.log("email matches ", adminSchool);
         if (!adminSchool) {
             return res.status(404).json({ message: "Admin not found" });
         }
 
-        const match = await bcrypt.compare(adminPassword, adminSchool.adminPassword);
+        const match = await bcrypt.compare(password, adminSchool.adminPassword);
+        console.log("admin password", match)
         if (!match) {
             return res.status(401).json({ message: "Password is incorrect" });
         }
@@ -66,7 +69,7 @@ router.post("/AdminLoginDetails", async (req, res) => {
                 httpOnly: true,
                 secure: false,
                 sameSite: "lax",
-                maxAge: 24 * 60 * 60 * 1000 
+                maxAge: 24 * 60 * 60 * 1000
             })
             .cookie("role", "admin", {
                 httpOnly: true,

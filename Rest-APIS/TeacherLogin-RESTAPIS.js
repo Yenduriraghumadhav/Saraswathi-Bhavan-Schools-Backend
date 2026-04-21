@@ -43,20 +43,18 @@ router.post("/teacherLogin", async (req, res) => {
                 role: "teacher",
                 TeacherEmail: user.TeacherEmail,
                 TeacherName: user.TeacherName,
-                TeacherPhone: user.TeacherPhone,
-                TeacherAddress: user.TeacherAddress,
-                TeacherImage: user.TeacherImage
+                TeacherAssignedclass: user.TeacherAssignedclass
             },
             JWT_SECRET,
             { expiresIn: "1d" }
         );
 
         res.cookie("token", token, {
-                httpOnly: true,
-                secure: false,
-                sameSite: "lax",
-                 maxAge: 24 * 60 * 60 * 1000
-            })
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+            maxAge: 24 * 60 * 60 * 1000
+        })
             .cookie("role", "teacher", {
                 httpOnly: true,
                 secure: false,
@@ -72,10 +70,10 @@ router.post("/teacherLogin", async (req, res) => {
                     TeacherName: user.TeacherName,
                     TeacherPhone: user.TeacherPhone,
                     TeacherAddress: user.TeacherAddress,
-                    TeacherImage: user.TeacherImage
+                    TeacherImage: user.TeacherImage,
+                    TeacherAssignedclass: user.TeacherAssignedclass
                 }
             });
-
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });
     }

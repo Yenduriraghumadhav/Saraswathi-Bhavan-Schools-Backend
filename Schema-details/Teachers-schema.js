@@ -9,7 +9,7 @@ const TeacherSchema = new mongooes.Schema({
     TeacherEmail: {
         type: String,
         required: true,
-        unique : true
+        unique: true
     },
     TeacherPassword: {
         type: String,
@@ -33,13 +33,17 @@ const TeacherSchema = new mongooes.Schema({
         enum: ["male", "female", "others"],
         default: "male"
     },
-    TeacherImage : {
+    TeacherImage: {
         type: String,
         default: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
     },
     TeacherJoinDate: {
         type: Date,
         default: Date.now
+    },
+    TeacherAssignedclass: {
+        type: Number,
+        enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     }
 })
 

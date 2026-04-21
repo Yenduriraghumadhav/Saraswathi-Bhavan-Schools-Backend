@@ -21,6 +21,7 @@ const getInTouchDetails = require("../Rest-APIS/Get-in-touch-RESTAPIS");
 const totallogoutDetails = require("../Rest-APIS/Logout-forall-RESTAPIS");
 const otpforstudents = require("../Rest-APIS/Otp-for-students-RESTAPIS");
 const otpforteachers = require("../Rest-APIS/Otp-for-teachers-RESTAPIS");
+const totalstudentmarks = require("../Rest-APIS/total-students-marks-RESTAPIS");
 
 
 router.use("/firstclass", firstclass);
@@ -44,5 +45,6 @@ router.use("/getInTouchDetails", getInTouchDetails);
 router.use("/totallogout", totallogoutDetails);
 router.use("/otpforstudents", otpforstudents);
 router.use("/otpforteachers", otpforteachers);
+router.use("/totalstudentmarks", totalstudentmarks);
 
 module.exports = router;

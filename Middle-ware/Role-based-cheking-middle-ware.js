@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
-const teacherModel = require("../Schema-details/TeachersLogin-schema");  
-const adminModel = require("../Schema-details/AdminDetails-schema");    
+const teacherModel = require("../Schema-details/TeachersLogin-schema");
+const adminModel = require("../Schema-details/AdminDetails-schema");
 const studentModel = require("../Schema-details/StudentDetails-schema");
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
 
 
 const roleCheckingMiddleware = async (req, res, next) => {
   try {
-    const token = req.cookies?.token; 
+    const token = req.cookies?.token;
     if (!token) {
       return res.status(401).json({ message: "No token provided in cookies" });
     }
@@ -16,6 +16,8 @@ const roleCheckingMiddleware = async (req, res, next) => {
 
     const userEmail = decoded.TeacherEmail || decoded.adminEmail || decoded.stdemail || decoded.email;
     const userRole = decoded.role;
+    const userClass = decoded.TeacherAssignedclass || decoded.stdclass;
+    
 
 
     let user;
@@ -37,8 +39,10 @@ const roleCheckingMiddleware = async (req, res, next) => {
       id: user._id,
       email: userEmail,
       role: userRole,
-      status: user.status || user.adminStatus
+      status: user.status || user.adminStatus,
+      classess: userClass
     };
+    console.log("User attached to req:", req.user);
 
     next();
   } catch (error) {
