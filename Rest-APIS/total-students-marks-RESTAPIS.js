@@ -9,6 +9,7 @@ router.get("/filteredstudentmarks", requireRole(["student"]), async (req, res) =
 
     try {
         const { rollNumber, stdclass } = req.query;
+        console.log("query",req.query);
 
         if (!rollNumber || !stdclass) {
             return res.status(400).json({

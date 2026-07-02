@@ -9,7 +9,7 @@ const app = express();
 const path = require("path");
 const absolutePath = path.join(__dirname, "studentimageuploads");
 app.use(crors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: ["http://localhost:5173", "http://localhost:5174" , "http://localhost:4200"],
     credentials: true
 }));
 app.use(cookieParser());
@@ -17,7 +17,7 @@ app.use(express.json());
 app.use("/api", mainroute);
 app.use("/uploads", express.static(absolutePath));
 
-const PORT = process.env.PORT || 2001;
+const PORT = 2001;
 
 connectDB().then(() => {
     app.listen(PORT, () => {

@@ -39,7 +39,7 @@ const roleCheckingMiddleware = async (req, res, next) => {
       id: user._id,
       email: userEmail,
       role: userRole,
-      status: user.status || user.adminStatus,
+      status: user.status || user.adminStatus || user.TeacherStatus,
       classess: userClass
     };
     console.log("User attached to req:", req.user);

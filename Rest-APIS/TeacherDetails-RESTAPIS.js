@@ -2,10 +2,40 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const TeacherDetails = require("../Schema-details/Teachers-schema");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+const uploadPath = path.join(__dirname, "..", "studentimageuploads");
+const { roleCheckingMiddleware, requireRole } = require("../Middle-ware/Role-based-cheking-middle-ware");
+router.use(roleCheckingMiddleware);
 
-router.post("/TeacherDetails", async (req, res) => {
+if (!fs.existsSync(uploadPath)) {
+    fs.mkdirSync(uploadPath, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, uploadPath);
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + "-" + file.originalname);
+    }
+});
+
+const upload = multer({ storage: storage });
+
+router.post("/TeacherDetails", requireRole(["admin"]), upload.single("TeacherImage"), async (req, res) => {
     try {
-        const { TeacherName, TeacherEmail, TeacherPassword, TeacherPhone, TeacherAddress, TeacherStatus, TeacherGender ,TeacherImage ,TeacherAssignedclass} = req.body;
+        console.log(req.body)
+        const { TeacherName, TeacherEmail, TeacherPassword, TeacherPhone, TeacherAddress, TeacherStatus, TeacherGender, TeacherAssignedclass } = req.body;
+
+        const TeacherImage = req.file ? req.file.filename : null;
+        console.log("[TeacherDetails] TeacherImage filename:", TeacherImage);
+
+        if (!TeacherImage) {
+            return res.status(400).json({ error: "Teacher image is required" });
+        }
+
         if (!TeacherName || !TeacherEmail || !TeacherPassword || !TeacherPhone || !TeacherAddress || !TeacherGender || !TeacherImage || !TeacherAssignedclass) {
             return res.status(400).json({
                 error: "All fields are required",
@@ -62,7 +92,10 @@ router.post("/TeacherDetails", async (req, res) => {
         const saved = await newTeacher.save();
         return res.status(201).json(saved);
     } catch (error) {
-        return res.status(500).json({ error: "Internal server error" });
+        console.error(error);
+        return res.status(500).json({
+            error: error.message
+        });
     }
 });
 

@@ -38,12 +38,15 @@ router.get("/studentLogin", async (req, res) => {
 
 router.post("/studentLogin", async (req, res) => {
     try {
+        console.log(req.body);
         const { stdemail, stdpassword } = req.body;
+        console.log(stdemail, stdpassword);
         if (!stdemail || !stdpassword) {
             return res.status(400).json({ message: "Email and password are required" });
         }
 
         const user = await studentDetailsmodel.findOne({ stdemail });
+        console.log(res);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }

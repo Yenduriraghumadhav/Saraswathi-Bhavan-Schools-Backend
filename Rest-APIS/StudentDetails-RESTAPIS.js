@@ -6,6 +6,8 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const uploadPath = path.join(__dirname, "..", "studentimageuploads");
+const { roleCheckingMiddleware, requireRole } = require("../Middle-ware/Role-based-cheking-middle-ware");
+router.use(roleCheckingMiddleware);
 
 if (!fs.existsSync(uploadPath)) {
     fs.mkdirSync(uploadPath, { recursive: true });
@@ -22,9 +24,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.post("/StudentDetails", upload.single("stdImage"), async (req, res) => {
+router.post("/StudentDetails", requireRole(["admin"]), upload.single("stdImage"), async (req, res) => {
     try {
-         console.log(req.file);
+        console.log(req.file);
         console.log("[StudentDetails] Received request body:", req.body);
         const { stdname, stdrollNumber, stdemail, stdphoneNumber, stdaddress, stdpassword, stdfathername, stdmothername, stdgender, stdclass } = req.body;
         const stdImage = req.file ? req.file.filename : null;

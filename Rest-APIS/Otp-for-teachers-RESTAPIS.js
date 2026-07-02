@@ -77,7 +77,7 @@ router.post("/verifyteacherotp", async (req, res) => {
         }
         const resetToken = jwt.sign(
             { email: teacheremail },
-            process.env.JWT_SECRET,
+            JWT_SECRET,
             { expiresIn: "45sec" }
         );
 
@@ -103,7 +103,7 @@ router.post("/resetteacherpassword", async (req, res) => {
             return res.status(400).json({ message: "enter the teacher email, new password and reset token" });
         }
 
-        const decoded = jwt.verify(resetToken, process.env.JWT_SECRET);
+        const decoded = jwt.verify(resetToken, JWT_SECRET);
 
         const hashedPassword = await bcrypt.hash(newpassword, 10);
 

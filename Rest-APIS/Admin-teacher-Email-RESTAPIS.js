@@ -65,6 +65,7 @@ router.post("/invite", async (req, res) => {
         console.error("Error creating invite:", error);
         res.status(500).json({ error: "Internal server error" });
     }
+
 });
 
 module.exports = router;
